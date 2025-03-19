@@ -44,34 +44,6 @@
                 <h2 class="text-xl font-bold">Bienvenido al sistema</h2>
                 <p class="text-gray-700">Estás logueado como usuario.</p>
             </div>
-
-            <div class="mt-6">
-                <h2 class="text-2xl font-bold">Lista de Usuarios</h2>
-                <table class="w-full mt-4 bg-white shadow-md rounded">
-                    <thead>
-                        <tr class="bg-gray-800 text-white">
-                            <th class="py-2 px-4">ID</th>
-                            <th class="py-2 px-4">Nombre</th>
-                            <th class="py-2 px-4">Correo</th>
-                            <th class="py-2 px-4">Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b">
-                            <td class="py-2 px-4">1</td>
-                            <td class="py-2 px-4">Juan Pérez</td>
-                            <td class="py-2 px-4">juan@example.com</td>
-                            <td class="py-2 px-4">Usuario</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="py-2 px-4">2</td>
-                            <td class="py-2 px-4">Ana López</td>
-                            <td class="py-2 px-4">ana@example.com</td>
-                            <td class="py-2 px-4">Usuario</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </main>
     </div>
 </body>

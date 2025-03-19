@@ -8,7 +8,7 @@
 </head>
 <body class="bg-blue-100 flex items-center justify-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 class="text-2xl font-bold text-center text-blue-900">Purificadora de Agua</h2>
+        <h2 class="text-2xl font-bold text-center text-blue-900">¡El Aguaaaa!</h2>
         <p class="text-gray-600 text-center">Inicia sesión para continuar</p>
         
         <form method="POST" action="{{ route('login') }}" class="mt-6">

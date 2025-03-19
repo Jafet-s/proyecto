@@ -509,13 +509,13 @@
 
         <nav>
 
-            <ul>
+        <ul>
                 <li><a href="">Buscar</a></li>
-                <li><a href="">Proveedores</a></li>
-                <li><a href="">Categorias</a></li>
-                <li><a href="">Camionetas</a></li>
-                <li><a href="">Clientes</a></li>
-                <li><a href="">Categorias</a></li>
+                <li><a href="{{ route('/consultar-api')}}">Repartidores</a></li>
+                <li><a href="{{ route('/consultar-apiAdm')}}">Administradores</a></li>
+                <li><a href="{{ route('/consultar-apiCli')}}">Clientes</a></li>
+                <li><a href="{{ route('/consultar-apiGar')}}">Garrafones</a></li>
+                <li><a href="{{ route('/consultar-apiCam')}}">Camionetas</a></li>
             </ul>
         </nav>
     </header>
