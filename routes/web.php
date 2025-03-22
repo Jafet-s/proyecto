@@ -47,8 +47,8 @@ Route::middleware(['auth', 'role:vendedor'])->group(function () {
     Route::get('/vendedor/dashboard', [VendedorController::class, 'dashboard'])->name('vendedor.dashboard');
 });
 
-
-
+// ruta para el login de administradores 
+Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
 
 
 

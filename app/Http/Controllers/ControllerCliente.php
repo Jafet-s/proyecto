@@ -15,7 +15,7 @@ class ControllerCliente extends Controller
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
     
-        $url = "http://localhost:3000/api/tb_cliente?page={$page}";
+        $url = "http://localhost:3002/api/tb_cliente?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
@@ -31,7 +31,7 @@ class ControllerCliente extends Controller
     }
     public function getData2Cli($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3000/api/id_cliente/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_cliente/'. $id);
 
         
 
@@ -51,7 +51,7 @@ class ControllerCliente extends Controller
     public function deleteDataCli($id)
     {
         // Hacemos una solicitud DELETE a la API para eliminar el recurso
-        $response = Http::delete('http://localhost:3000/api/eli_cliente/' . $id);
+        $response = Http::delete('http://localhost:3002/api/eli_cliente/' . $id);
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
@@ -65,7 +65,7 @@ class ControllerCliente extends Controller
     {
        
         // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:3000/api/id_cliente/' . $id);
+        $response = Http::get('http://localhost:3002/api/id_cliente/' . $id);
 
         // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
@@ -94,7 +94,7 @@ class ControllerCliente extends Controller
         ]);
 
         // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:3000/api/act_cliente/' . $id, [
+        $response = Http::put('http://localhost:3002/api/act_cliente/' . $id, [
             'nombre' => $request->nombre,
             'telefono' => $request->telefono,
             'username' => $request->username,
@@ -122,7 +122,7 @@ class ControllerCliente extends Controller
         try {
 
         // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3000/api/registro_cliente/', [
+        $response = Http::post('http://localhost:3002/api/registro_cliente/', [
         'nombre' => $request->input('nombre'),
         'telefono' => $request->input('telefono'),
         'username' => $request->input('username'),

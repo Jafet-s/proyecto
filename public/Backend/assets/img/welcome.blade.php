@@ -468,9 +468,6 @@
             }
         }
 
-        .logo{
-            border: none; 
-        }
 
 
         .additional-info h2 {
@@ -487,28 +484,25 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">
-
-            </div>
             <h1>¡El aguaaaa!</h1>
             <p class="slogan">"El aguaaaa by Elia's Studios"</p>
 
         </div>
         <!-- botones de inicio y registrar  -->
         @if (Route::has('login'))
-            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-lg">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg me-2">Log in</a>
+    <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+        @auth
+            <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-lg">Dashboard</a>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg me-2">Log in</a>
 
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn btn-light btn-lg">Register</a>
-                    @endif
-                @endauth
-                <a href="{{ route('admin.login') }}" class="btn btn-outline-light btn-lg me-2">login de administradores </a>
-            </div>
-        @endif
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}" class="btn btn-light btn-lg">Register</a>
+            @endif
+        @endauth
+        <a href="{{ route('admin.login') }}" class="btn btn-outline-light btn-lg me-2">login de administradores </a>
+    </div>
+@endif
 
         <!-- Hasta aqui termina -->
         <hr>
@@ -516,7 +510,7 @@
 
         <nav>
 
-
+        
         </nav>
     </header>
 
@@ -558,13 +552,13 @@
         <div class="grid">
             <div class="gallery-item">
 
-                <img src="{{ asset('Backend/assets/img/compu2.jpeg')}}" alt="Elia's Studios">
+                <img src="{{ asset('storage/compu2.jpeg')}}" alt="Elia's Studios">
             </div>
             <div class="gallery-item">
-                <img src="{{ asset('Backend/assets/img/garrafones.jpeg')}}" alt="UTVT">
+                <img src="{{ asset('storage/garrafones.jpeg')}}" alt="UTVT">
             </div>
             <div class="gallery-item">
-                <img src="{{ asset('Backend/assets/img/compu.jpeg')}}" alt="UTVT">
+                <img src="{{ asset('storage/compu.jpeg')}}" alt="UTVT">
             </div>
     </section>
     <!-- Sección Galería Dulce (modificada) -->

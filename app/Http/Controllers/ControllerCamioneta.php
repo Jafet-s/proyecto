@@ -13,7 +13,7 @@ class ControllerCamioneta extends Controller
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
     
-        $url = "http://localhost:3000/api/tb_camionetas?page={$page}";
+        $url = "http://localhost:3002/api/tb_camionetas?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
@@ -25,7 +25,7 @@ class ControllerCamioneta extends Controller
     
     public function getData2Cam($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3000/api/id_camioneta/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_camioneta/'. $id);
 
         
 
@@ -45,7 +45,7 @@ class ControllerCamioneta extends Controller
     public function deleteDataCam($id)
     {
         // Hacemos una solicitud DELETE a la API para eliminar el recurso
-        $response = Http::delete('http://localhost:3000/api/eli_camioneta/' . $id);
+        $response = Http::delete('http://localhost:3002/api/eli_camioneta/' . $id);
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
@@ -59,7 +59,7 @@ class ControllerCamioneta extends Controller
     {
        
         // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:3000/api/id_camioneta/' . $id);
+        $response = Http::get('http://localhost:30023002/api/id_camioneta/' . $id);
 
         // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
@@ -89,7 +89,7 @@ class ControllerCamioneta extends Controller
         ]);
 
         // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:3000/api/act_camioneta/' . $id, [
+        $response = Http::put('http://localhost:30023002/api/act_camioneta/' . $id, [
             'placas' => $request->placas,
             'marca' => $request->marca,
             'modelo' => $request->modelo,
@@ -119,7 +119,7 @@ class ControllerCamioneta extends Controller
         try {
 
         // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3000/api/registro_camioneta/', [
+        $response = Http::post('http://localhost:3002/api/registro_camioneta/', [
             'placas' => $request->input('placas'),
             'marca' => $request->input('marca'),
             'modelo' => $request->input('modelo'),

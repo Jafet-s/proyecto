@@ -16,7 +16,7 @@ class ControllerAPI extends Controller
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
     
-        $url = "http://localhost:3000/api/tb_repartidores?page={$page}";
+        $url = "http://localhost:3002/api/tb_repartidores?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
@@ -32,7 +32,7 @@ class ControllerAPI extends Controller
     }
     public function getData2($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3000/api/id_repartidores/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_repartidores/'. $id);
 
         
 
@@ -52,7 +52,7 @@ class ControllerAPI extends Controller
     public function deleteData($id)
     {
         // Hacemos una solicitud DELETE a la API para eliminar el recurso
-        $response = Http::delete('http://localhost:3000/api/eli_repartidores/' . $id);
+        $response = Http::delete('http://localhost:3002/api/eli_repartidores/' . $id);
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
@@ -66,7 +66,7 @@ class ControllerAPI extends Controller
     {
        
         // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:3000/api/id_repartidores/' . $id);
+        $response = Http::get('http://localhost:3002/api/id_repartidores/' . $id);
 
         // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
@@ -96,7 +96,7 @@ class ControllerAPI extends Controller
         ]);
 
         // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:3000/api/act_repartidores/' . $id, [
+        $response = Http::put('http://localhost:3002/api/act_repartidores/' . $id, [
             'username' => $request->username,
             'nombre' => $request->nombre,
             'App' => $request->App,
@@ -126,7 +126,7 @@ class ControllerAPI extends Controller
         try {
 
         // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3000/api/registro_repartidores/', [
+        $response = Http::post('http://localhost:3002/api/registro_repartidores/', [
             'username' => $request->input('username'),
         'nombre' => $request->input('nombre'),
         'App' => $request->input('App'),

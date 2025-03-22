@@ -1,62 +1,72 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('admin.layouts.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sensores de Agua</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 
-<body class="bg-gray-100">
-    <div class="flex h-screen">
-
-    <aside class="w-64 bg-blue-900 text-white p-5 space-y-6">
-            <h2 class="text-2xl font-bold">Admin Panel</h2>
-            <nav>
-                <ul class="space-y-4">
-                    <li><a href="#" class="block py-2 px-4 bg-blue-700 rounded">Dashboard</a></li>
-                    <li><a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded">Sensores</a></li>
-                    <li><a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded">Alertas</a></li>
-                    <li><a href="#" class="block py-2 px-4 hover:bg-blue-700 rounded">Usuarios</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <!-- <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link> -->
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                this.closest('form').submit();" class="block py-2 px-4 hover:bg-red-700 rounded">Cerrar
-                                sesión</a>
-
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-10">
-            <h1 class="text-3xl font-bold mb-5">Dashboard - Sensores de Agua</h1>
-
-            <div class="grid grid-cols-3 gap-6">
-                <div class="bg-white p-5 rounded shadow">
-                    <h2 class="text-xl font-bold">Sensores Activos</h2>
-                    <p class="text-4xl font-bold text-blue-600">15</p>
-                </div>
-                <div class="bg-white p-5 rounded shadow">
-                    <h2 class="text-xl font-bold">Alertas Hoy</h2>
-                    <p class="text-4xl font-bold text-red-600">3</p>
-                </div>
-                <div class="bg-white p-5 rounded shadow">
-                    <h2 class="text-xl font-bold">Usuarios Registrados</h2>
-                    <p class="text-4xl font-bold text-green-600">42</p>
+@section('content')
+    <section class="section">
+        <div class="section-header">
+            <h1>Dashboard</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-primary">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Total Admin</h4>
+                        </div>
+                        <div class="card-body">
+                            10
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
-</body>
-
-</html>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-danger">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>News</h4>
+                        </div>
+                        <div class="card-body">
+                            42
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-warning">
+                        <i class="far fa-file"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Reports</h4>
+                        </div>
+                        <div class="card-body">
+                            1,201
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-success">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Online Users</h4>
+                        </div>
+                        <div class="card-body">
+                            47
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

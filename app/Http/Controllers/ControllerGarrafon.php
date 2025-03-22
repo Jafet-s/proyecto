@@ -13,7 +13,7 @@ class ControllerGarrafon extends Controller
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
     
-        $url = "http://localhost:3000/api/tb_garrafon_agua?page={$page}";
+        $url = "http://localhost:3002/api/tb_garrafon_agua?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
@@ -29,7 +29,7 @@ class ControllerGarrafon extends Controller
     }
     public function getData2Gar($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3000/api/id_garrafon/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_garrafon/'. $id);
 
         
 
@@ -49,7 +49,7 @@ class ControllerGarrafon extends Controller
     public function deleteDataGar($id)
     {
         // Hacemos una solicitud DELETE a la API para eliminar el recurso
-        $response = Http::delete('http://localhost:3000/api/eli_garrafon/' . $id);
+        $response = Http::delete('http://localhost:3002/api/eli_garrafon/' . $id);
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
@@ -63,7 +63,7 @@ class ControllerGarrafon extends Controller
     {
        
         // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:3000/api/id_garrafon/' . $id);
+        $response = Http::get('http://localhost:3002/api/id_garrafon/' . $id);
 
         // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
@@ -91,7 +91,7 @@ class ControllerGarrafon extends Controller
         ]);
 
         // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:3000/api/act_garrafon/' . $id, [
+        $response = Http::put('http://localhost:3002/api/act_garrafon/' . $id, [
             'estado' => $request->estado,
             'peso' => $request->peso,
             'marca' => $request->marca,
@@ -115,7 +115,7 @@ class ControllerGarrafon extends Controller
         try {
 
         // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3000/api/registro_garrafon/', [
+        $response = Http::post('http://localhost:3002/api/registro_garrafon/', [
         'estado' => $request->input('estado'),
         'peso' => $request->input('peso'),
         'marca' => $request->input('marca'),
