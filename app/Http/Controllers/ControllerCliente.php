@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ClientesImport;
+use App\Exports\ClientesExport;
+
 
 class ControllerCliente extends Controller
 {
@@ -14,32 +16,33 @@ class ControllerCliente extends Controller
     {
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
-    
+
         $url = "http://localhost:3002/api/tb_cliente?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
-    
+
         $data = Http::get($url)->json();
-    
+
         return view('clientes.getData', ['data' => $data]);
     }
-    
+
     public function welcome()
-    {    
+    {
         return view('welcome');
     }
-    public function getData2Cli($id){
+    public function getData2Cli($id)
+    {
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3002/api/id_cliente/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_cliente/' . $id);
 
-        
+
 
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
             $data = $response->json(); // Obtiene los datos en formato JSON
-            
+
             //return view('getData2')->with(['data' => $data]);
 
             return view('clientes.getData2', compact('data')); // Pasamos los datos a una vista
@@ -63,7 +66,7 @@ class ControllerCliente extends Controller
 
     public function showEditCli($id)
     {
-       
+
         // Obtener los datos actuales de la API
         $response = Http::get('http://localhost:3002/api/id_cliente/' . $id);
 
@@ -103,13 +106,14 @@ class ControllerCliente extends Controller
         ]);
 
         if ($response->successful()) {
-                return redirect()->route('/consultar-apiCli')->with('success', 'Registro actualizado correctamente');
-            } else {
-                return back()->withErrors(['error' => 'Error al actualizar el registro.']);
+            return redirect()->route('/consultar-apiCli')->with('success', 'Registro actualizado correctamente');
+        } else {
+            return back()->withErrors(['error' => 'Error al actualizar el registro.']);
         }
     }
 
-    public function postDataCli(Request $request) {
+    public function postDataCli(Request $request)
+    {
         // Validar los datos del formulario
         $request->validate([
             'nombre' => 'required',
@@ -121,23 +125,23 @@ class ControllerCliente extends Controller
 
         try {
 
-        // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3002/api/registro_cliente/', [
-        'nombre' => $request->input('nombre'),
-        'telefono' => $request->input('telefono'),
-        'username' => $request->input('username'),
-        'correo' => $request->input('correo'),
-        'contraseña' => $request->input('contraseña'),
-        ]);
+            // Enviar los datos a la API para crear un nuevo registro
+            $response = Http::post('http://localhost:3002/api/registro_cliente/', [
+                'nombre' => $request->input('nombre'),
+                'telefono' => $request->input('telefono'),
+                'username' => $request->input('username'),
+                'correo' => $request->input('correo'),
+                'contraseña' => $request->input('contraseña'),
+            ]);
 
-        // Verificar si la solicitud fue exitosa
-        if ($response->successful()) {
-            return redirect()->route('/consultar-apiCli')->with('success', 'Registro creado correctamente');
-        } else {
-            // Mostrar el mensaje de error de la API si está disponible
-            $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
-            return back()->withErrors(['error' => $errorMessage]);
-        }
+            // Verificar si la solicitud fue exitosa
+            if ($response->successful()) {
+                return redirect()->route('/consultar-apiCli')->with('success', 'Registro creado correctamente');
+            } else {
+                // Mostrar el mensaje de error de la API si está disponible
+                $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
+                return back()->withErrors(['error' => $errorMessage]);
+            }
         } catch (\Exception $e) {
             // Mostrar el mensaje de error general si no se pudo conectar con la API
             return back()->withErrors(['error' => 'Error al conectar con la API.']);
@@ -148,24 +152,31 @@ class ControllerCliente extends Controller
 
 
     // Vista de formulario para crear un nuevo registro (cambia el nombre de la función)
-    public function showFormCli() {
+    public function showFormCli()
+    {
         return view('clientes.postData');
     }
 
 
     public function importClientes(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls'
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
 
-    Excel::import(new ClientesImport, $request->file('file'));
+        Excel::import(new ClientesImport, $request->file('file'));
 
-    return redirect()->back()->with('success', 'Registros importados correctamente');
-}
-
-
+        return redirect()->back()->with('success', 'Registros importados correctamente');
+    }
 
 
-    
+
+    public function exportarClientes()
+    {
+        return Excel::download(new ClientesExport, 'clientes.xlsx');
+    }
+
+
+
+
 }

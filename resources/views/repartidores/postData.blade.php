@@ -19,11 +19,23 @@
         body {
             background-color: #f8f9fa;
             animation: fadeIn 1s ease-in-out;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 40px;
+            background: linear-gradient(135deg, #313235, #955aff, #ffc623, #da4c4c, #313235);
+            background-size: 125%;
+            animation: fanimado 15s infinite;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .container {
             max-width: 600px;
             margin-top: 50px;
+            align-items: center;
         }
 
         .card {
@@ -87,7 +99,7 @@
         }
 
         .btn-dark {
-            background-color: rgb(165, 59, 69);
+            background-color: rgb(255, 52, 72);
             border-color: #343a40;
             padding: 0.75rem 1.5rem;
             border-radius: 25px;
@@ -98,7 +110,7 @@
         }
 
         .btn-dark:hover {
-            background-color:rgb(100, 27, 27);
+            background-color:rgb(255, 61, 61);
             border-color: #23272b;
             transform: translateY(-2px);
         }

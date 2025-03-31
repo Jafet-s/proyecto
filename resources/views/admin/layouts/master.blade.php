@@ -44,6 +44,17 @@
         gtag('config', 'UA-94034622-3');
     </script>
     <!-- /END GA -->
+    <script type="text/javascript">
+        // Evitar que el navegador regrese a la página anterior
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
+
+    <style>
+
+    </style>
 </head>
 
 <body>

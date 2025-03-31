@@ -1,55 +1,71 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Exports\CamionetaExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ControllerCamioneta extends Controller
 {
-    public function getDataCam(Request $request)
+    public function getDataCam()
     {
-        $searchTerm = $request->input('search', '');
-        $page = $request->input('page', 1);
-    
-        $url = "http://localhost:3002/api/tb_camionetas?page={$page}";
-        if ($searchTerm) {
-            $url .= "&search=" . urlencode($searchTerm);
-        }
-    
-        $data = Http::get($url)->json();
-    
-        return view('camioneta.getData', ['data' => $data]);
-    }
-    
-    public function getData2Cam($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3002/api/id_camioneta/'. $id);
-
-        
-
+        $response = Http::get('http://localhost:3002/api/tb_camionetas/');
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
             $data = $response->json(); // Obtiene los datos en formato JSON
-            
-            //return view('getData2')->with(['data' => $data]);
 
-            return view('camioneta.getData2', compact('data')); // Pasamos los datos a una vista
+            //si las carreras contengan un id_universidad, se obtiene el nombre de la universidad
+            foreach ($data as &$camioneta) { // Usamos & para modificar el array original
+                $repartidoresResponse = Http::get('http://localhost:3002/api/id_repartidores/' . $camioneta['id_repartidor']);
+                if ($repartidoresResponse->successful()) {
+                    $camioneta['repartidor'] = $repartidoresResponse->json();
+                } else {
+                    $camioneta['repartidor'] = ['username' => 'No se enconto repartidor'];
+                }
+            }
+
+            return view('camioneta.getData', compact('data')); // Pasamos los datos a una vista
         } else {
-            return back()->withErrors('Error al obtener el registro.');
+            return response()->json(['error' => 'Error al consultar la API'], 500);
+        }
+    }
+
+    public function getData2Cam($id)
+    {
+        $response = Http::get('http://localhost:3002/api/id_camioneta/' . $id);
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            if (isset($data['id_repartidor'])) {
+                $repartidorResponse = Http::get('http://localhost:3002/api/id_repartidores/' . $data['id_repartidor']);
+                if ($repartidorResponse->successful()) {
+                    $data['repartidor'] = $repartidorResponse->json();
+                } else {
+                    $data['repartidor'] = ['nombre' => 'No se encontró el repartidor'];
+                }
+            } else {
+                $data['repartidor'] = ['nombre' => 'No tiene repartidor asociado'];
+            }
+
+            return view('camioneta.getData2', compact('data'));
+        } else {
+            return response()->json(['error' => 'Error al consultar la API'], 500);
         }
     }
 
     public function deleteDataCam($id)
     {
-        // Hacemos una solicitud DELETE a la API para eliminar el recurso
         $response = Http::delete('http://localhost:3002/api/eli_camioneta/' . $id);
 
-        // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
-            return redirect('/consultar-apiCam')->with('message', 'Recurso eliminado correctamente');
+            return redirect()->route('/consultar-apiCam')->with('success', 'Camioneta eliminada correctamente');
         } else {
             return response()->json(['error' => 'Error al eliminar el recurso'], 500);
         }
@@ -57,109 +73,74 @@ class ControllerCamioneta extends Controller
 
     public function showEditCam($id)
     {
-       
-        // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:30023002/api/id_camioneta/' . $id);
+        $response = Http::get("http://localhost:3002/api/id_camioneta/$id");
 
-        // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
-            // Obtener los datos del alumno
             $data = $response->json();
+            $repartidoresResponse = Http::get("http://localhost:3002/api/id_repartidores/");
+            $repartidores = $repartidoresResponse->successful() ? $repartidoresResponse->json() : [];
 
-
-            // Retornar la vista con los datos del alumno
-            return view('camioneta.updateData', compact('data'));
-        } else {
-            // Si no se encuentra el recurso
-            return back()->withErrors(['error' => 'Error al obtener los datos para actualizar.']);
+            return view('camioneta.updateData', [
+                'camioneta' => $data,
+                'repartidores' => $repartidores,
+            ]);
         }
+
+        return back()->withErrors(['error' => 'Error al obtener los datos de la camioneta']);
     }
 
-    // Método para procesar la actualización
     public function actualizarCam(Request $request, $id)
     {
-        // Validar los datos del formulario
         $request->validate([
-            'placas' => 'required',
-            'marca' => 'required',
-            'modelo' => 'required',
-            'capacidad' => 'required',
-            'id_garrafon' => 'required',
-            'id_repartidor' => 'required',
+            'placas' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'modelo' => 'required|string|max:255',
+            'capacidad' => 'required|string|max:255',
+            'id_repartidor' => 'required|integer',
         ]);
 
-        // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:30023002/api/act_camioneta/' . $id, [
-            'placas' => $request->placas,
-            'marca' => $request->marca,
-            'modelo' => $request->modelo,
-            'capacidad' => $request->capacidad,
-            'id_garrafon' => $request->id_garrafon,
-            'id_repartidor' => $request->id_repartidor, // Asegúrate de que coincida con la API
-        ]);
+        $response = Http::put("http://localhost:3002/api/camionetas/$id", $request->all());
 
         if ($response->successful()) {
-                return redirect()->route('/consultar-apiCam')->with('success', 'Registro actualizado correctamente');
-            } else {
-                return back()->withErrors(['error' => 'Error al actualizar el registro.']);
-        }
-    }
-
-    public function postDataCam(Request $request) {
-        // Validar los datos del formulario
-        $request->validate([
-            'placas' => 'required',
-            'marca' => 'required',
-            'modelo' => 'required',
-            'capacidad' => 'required',
-            'id_garrafon' => 'required',
-            'id_repartidor' => 'required',
-        ]);
-
-        try {
-
-        // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3002/api/registro_camioneta/', [
-            'placas' => $request->input('placas'),
-            'marca' => $request->input('marca'),
-            'modelo' => $request->input('modelo'),
-            'capacidad' => $request->input('capacidad'),
-            'id_garrafon' => $request->input('id_garrafon'),
-            'id_repartidor' => $request->input('id_repartidor'),
-        ]);
-
-        // Verificar si la solicitud fue exitosa
-        if ($response->successful()) {
-            return redirect()->route('/consultar-apiCam')->with('success', 'Registro creado correctamente');
+            return redirect()->route('camionetas.index')->with('success', 'Registro actualizado correctamente');
         } else {
-            // Mostrar el mensaje de error de la API si está disponible
-            $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
-            return back()->withErrors(['error' => $errorMessage]);
+            return back()->withErrors(['error' => 'Error al actualizar la camioneta']);
         }
-        } catch (\Exception $e) {
-            // Mostrar el mensaje de error general si no se pudo conectar con la API
-            return back()->withErrors(['error' => 'Error al conectar con la API.']);
+    }
 
+    public function postDataCam(Request $request)
+    {
+        $validated = $request->validate([
+            'placas' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
+            'modelo' => 'required|string|max:255',
+            'capacidad' => 'required|string|max:255',
+            'id_repartidor' => 'required|integer',
+        ]);
+
+        $response = Http::post('http://localhost:3002/api/registro_camioneta', $validated);
+
+        if ($response->successful()) {
+            return redirect()->route('/consultar-apiCam')->with('success', 'Camioneta creada con éxito.');
         }
 
+        return redirect()->back()->with('error', 'Error al crear la camioneta: ' . $response->body());
     }
 
+    public function showFormCam()
+    {
+        $response = Http::get('http://localhost:3002/api/tb_repartidores');
 
-    // Vista de formulario para crear un nuevo registro (cambia el nombre de la función)
-    public function showFormCam() {
-        return view('camioneta.postData');
+        if ($response->successful()) {
+            $repartidores = $response->json();
+            return view('camioneta.postData', compact('repartidores'));
+        }
+
+        return redirect()->back()->with('error', 'Error al obtener repartidores.');
     }
 
-    public function welcome()
-    {    
-        return view('welcome');
+    public function exportarCamionetas()
+    {
+        return Excel::download(new CamionetaExport, 'camionetas.xlsx');
     }
-
-
-   
-
-
-
-
-    
 }

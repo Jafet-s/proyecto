@@ -12,6 +12,12 @@
                 </div>
             @endif -->
 
+
+
+<!-- 
+            <img src="{{ asset('Backend/assets/img/capibara2.jpeg') }}" alt="Evento con postres"> -->
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -33,8 +39,8 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     <style>
         /* Estilos generales */
         .additional-info {
@@ -90,6 +96,7 @@
         header h1 {
             font-size: 3rem;
             color: #000000;
+            font-style: italic;
             /* Morado pastel */
         }
 
@@ -468,9 +475,6 @@
             }
         }
 
-        .logo{
-            border: none; 
-        }
 
 
         .additional-info h2 {
@@ -482,14 +486,12 @@
             background-color: #000000;
         }
     </style>
+
 </head>
 
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">
-
-            </div>
             <h1>¡El aguaaaa!</h1>
             <p class="slogan">"El aguaaaa by Elia's Studios"</p>
 
@@ -506,7 +508,6 @@
                         <a href="{{ route('register') }}" class="btn btn-light btn-lg">Register</a>
                     @endif
                 @endauth
-                <a href="{{ route('admin.login') }}" class="btn btn-outline-light btn-lg me-2">login de administradores </a>
             </div>
         @endif
 
@@ -514,10 +515,10 @@
         <hr>
 
 
-        <nav>
 
 
-        </nav>
+
+
     </header>
 
     <section id="inicio" class="inicio">
@@ -543,6 +544,7 @@
 
                 </p>
                 <button>Contáctanos</button>
+
             </div>
 
             <img src="{{ asset('Backend/assets/img/capibara2.jpeg') }}" alt="Evento con postres">

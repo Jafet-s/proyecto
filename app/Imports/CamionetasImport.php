@@ -1,21 +1,25 @@
 <?php
-
 namespace App\Imports;
 
-use App\Models\camionetas;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\Http;
 
-class CamionetasImport implements ToModel
+class CamionetasImport implements ToCollection
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        return new camionetas([
-            //
-        ]);
+        foreach ($rows as $index => $row) {
+            if ($index == 0) continue; // Saltar la primera fila si es encabezado
+
+            Http::post('http://localhost:3002/api/registro_camioneta', [
+                
+                'placas' => $row[0],
+                'marca' => $row[1],
+                'modelo' => $row[2],
+                'capacidad' => $row[3],     
+
+            ]);
+        }
     }
 }

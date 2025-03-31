@@ -3,82 +3,115 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Register &mdash; Stisla</title>
 
-    <!-- Include Tailwind CSS from CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="{{ asset('Backend/assets/modules/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('Backend/assets/modules/fontawesome/css/all.min.css') }}">
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{{ asset('Backend/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('Backend/assets/css/components.css') }}">
 </head>
 
-<body class="bg-blue-100  items-center justify-center h-screen">
+<body>
+    <div id="app">
+        <section class="section">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+                        <div class="login-brand">
+                            <img src="{{ asset('Backend/assets/img/logo.png') }}" alt="logo" width="200"
+                                class="shadow-light rounded-circle">
+                        </div>
 
-    <form method="POST" action="{{ route('register') }}"
-        class="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-        @csrf
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-center text-blue-900">¡El Aguaaaa!</h2>
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h4>Register</h4>
+                            </div>
 
-        </div>
-        <!-- Name -->
-        <div class="mb-6">
-            <label for="name" class="block text-lg font-semibold text-gray-700">Name</label>
-            <input id="name"
-                class="block mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
-            @error('name')
-                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
-            @enderror
-        </div>
+                            <div class="card-body">
+                                <form method="POST" action="{{ route('register') }}">
+                                    @csrf
 
-        <!-- Email Address -->
-        <div class="mb-6">
-            <label for="email" class="block text-lg font-semibold text-gray-700">Email</label>
-            <input id="email"
-                class="block mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                type="email" name="email" value="{{ old('email') }}" required autocomplete="username">
-            @error('email')
-                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
-            @enderror
-        </div>
+                                    <!-- Name -->
+                                    <div class="mb-4">
+                                        <label for="name" class="block text-gray-700">Name</label>
+                                        <br>
+                                        <input id="name" type="text" name="name" 
+                                            class="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            value="{{ old('name') }}" required autofocus autocomplete="name">
+                                        @error('name')
+                                            <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-        <!-- Password -->
-        <div class="mb-6">
-            <label for="password" class="block text-lg font-semibold text-gray-700">Password</label>
-            <input id="password"
-                class="block mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                type="password" name="password" required autocomplete="new-password">
-            @error('password')
-                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
-            @enderror
-        </div>
+                                    <!-- Email -->
+                                    <div class="mb-4">
+                                        <label for="email" class="block text-gray-700">Email</label>
+                                        <br>
+                                        <input id="email" type="email" name="email"
+                                            class="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            value="{{ old('email') }}" required autocomplete="username">
+                                        @error('email')
+                                            <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-        <!-- Confirm Password -->
-        <div class="mb-6">
-            <label for="password_confirmation" class="block text-lg font-semibold text-gray-700">Confirm
-                Password</label>
-            <input id="password_confirmation"
-                class="block mt-2 w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                type="password" name="password_confirmation" required autocomplete="new-password">
-            @error('password_confirmation')
-                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
-            @enderror
-        </div>
+                                    <!-- Password -->
+                                    <div class="mb-4">
+                                        <label for="password" class="block text-gray-700">Password</label>
+                                        <br>
+                                        <input id="password" type="password" name="password"
+                                            class="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            required autocomplete="new-password">
+                                        @error('password')
+                                            <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-        <!-- Actions -->
-        <div class="flex items-center justify-between mt-6">
-            <a class="text-sm text-indigo-600 hover:text-indigo-700" href="{{ route('login') }}">
-                Already registered?
-            </a>
+                                    <!-- Confirm Password -->
+                                    <div class="mb-4">
+                                        <label for="password_confirmation" class="block text-gray-700">Confirm Password</label>
+                                        <br>
+                                        <input id="password_confirmation" type="password" name="password_confirmation"
+                                            class="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            required autocomplete="new-password">
+                                        @error('password_confirmation')
+                                            <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-            </a>
+                                    <!-- Actions -->
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-info btn-lg btn-block">Register</button>
+                                        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back()">Regresar</button>
+                                    </div>
+                                </form>
 
-            <button type="submit"
-                class="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                Register
-            </button>
-        </div>
-    </form>
+                                <div class="text-center mt-4">
+                                    <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Already have an account? Log in</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </div>
 
+    <!-- General JS Scripts -->
+    <script src="{{ asset('Backend/assets/modules/jquery.min.js') }}"></script>
+    <script src="{{ asset('Backend/assets/modules/popper.js') }}"></script>
+    <script src="{{ asset('Backend/assets/modules/tooltip.js') }}"></script>
+    <script src="{{ asset('Backend/assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('Backend/assets/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
+    <script src="{{ asset('Backend/assets/modules/moment.min.js') }}"></script>
+    <script src="{{ asset('Backend/assets/js/stisla.js') }}"></script>
+
+    <!-- Template JS File -->
+    <script src="{{ asset('Backend/assets/js/scripts.js') }}"></script>
+    <script src="{{ asset('Backend/assets/js/custom.js') }}"></script>
 </body>
 
 </html>

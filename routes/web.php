@@ -18,6 +18,12 @@ use App\Http\Controllers\Backend\VendedorController;
 |
 */
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,29 +32,47 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
 require __DIR__.'/auth.php';
 // Grupo de rutas protegidas para administradores
 // Este middleware garantiza que solo los usuarios autenticados puedan acceder a las rutas protegidas.
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-        // Ruta al dashboard de administrador
+//rutas de administradores 
+// Rutas protegidas para administradores con prevención de regreso en historial
+Route::middleware(['auth', 'role:admin', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
 
+
+// Ruta de login para administradores (evita acceso si ya está autenticado)
+Route::get('/admin/login', function () {
+    if (auth()->check()) {
+        return redirect()->route('admin.dashboard'); // Si ya está autenticado, redirige al dashboard
+    }
+    return view('auth.admin-login');
+})->name('admin.login');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+
+// rutas de vendedores 
 // Si el usuario no tiene el rol requerido, probablemente se redirigirá a una página de acceso denegado 
 // o se lanzará un error HTTP 403.
-Route::middleware(['auth', 'role:vendedor'])->group(function () {
+// Rutas protegidas para vendedores
+Route::middleware(['auth', 'role:vendedor', 'prevent-back-history'])->group(function () {
     Route::get('/vendedor/dashboard', [VendedorController::class, 'dashboard'])->name('vendedor.dashboard');
 });
 
+
+// Ruta de login para vendedores (evita acceso si ya está autenticado)
+Route::get('/vendedor/login', function () {
+    if (auth()->check()) {
+        return redirect()->route('vendedor.dashboard'); // Si ya está autenticado, redirige al dashboard
+    }
+    return view('auth.vendedor-login'); // Asegúrate de que esta vista existe
+})->name('vendedor.login');
+
+
 // ruta para el login de administradores 
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+
 
 
 
@@ -70,7 +94,9 @@ Route::get('/', [ControllerAPI::class, 'welcome'])->name('/welcome');
 
 
 Route::post('/import-repartidores', [ControllerAPI::class, 'importRepartidores'])->name('import.repartidores');
+Route::get('/exportar-repartidores', [ControllerAPI::class, 'exportarRepartidores'])->name('exportar.repartidores');
 
+Route::get('/graficas-repartidores', [ControllerAPI::class, 'mostrarGraficas'])->name('graficas.repartidores');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,6 +115,7 @@ Route::get('/borrar-apiCam/{id}', [ControllerCamioneta::class, 'deleteDataCam'])
 
 Route::get('/editar-apiCam', [ControllerCamioneta::class, 'showEditCam'])->name('/editar-apiCam');
 Route::get('/', [ControllerCamioneta::class, 'welcome'])->name('/welcome');
+Route::get('/exportar-camionetas', [ControllerCamioneta::class, 'exportarCamionetas'])->name('exportar.camionetas');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ///Garrafones
@@ -105,6 +132,9 @@ Route::get('/editar-apiGar/{id}', [ControllerGarrafon::class, 'showEditGar']);
 Route::put('/actualizar-apiGar/{id}', [ControllerGarrafon::class, 'actualizarGar'])->name('actualizar.apiGar');
 Route::get('/borrar-apiGar/{id}', [ControllerGarrafon::class, 'deleteDataGar']);
 Route::get('/', [ControllerGarrafon::class, 'welcome'])->name('/welcome');
+Route::get('/exportar-garrafones', [ControllerGarrafon::class, 'exportarGarrafones'])->name('exportar.garrafones');
+Route::post('/import-garrafones', [ControllerGarrafon::class, 'importGarrafones'])->name('import.garrafones');
+Route::get('/graficas-garrafones', [ControllerGarrafon::class, 'mostrarGraficas'])->name('graficas.garrafones');
 
 
 
@@ -124,6 +154,7 @@ Route::get('/borrar-apiAdm/{id}', [ControllerAdmin::class, 'deleteDataAdm']);
 Route::get('/', [ControllerAdmin::class, 'welcome'])->name('/welcome');
 
 Route::post('/import-admin', [ControllerAdmin::class, 'importAdmin'])->name('import.administradores');
+Route::get('/exportar-admin', [ControllerAdmin::class, 'exportarAdmin'])->name('exportar.admin');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +172,20 @@ Route::put('/actualizar-apiCli/{id}', [ControllerCliente::class, 'actualizarCli'
 Route::get('/borrar-apiCli/{id}', [ControllerCliente::class, 'deleteDataCli']);
 Route::get('/', [ControllerCliente::class, 'welcome'])->name('/welcome');
 Route::post('/import-clientes', [ControllerCliente::class, 'importClientes'])->name('import.clientes');
+Route::get('/exportar-clientes', [ControllerCliente::class, 'exportarClientes'])->name('exportar.clientes');
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+
+///LED
+
+use App\Http\Controllers\EstadoLedController;
+
+Route::post('/leds', [EstadoLedController::class, 'store']);
+Route::get('/leds', [EstadoLedController::class, 'index']);
+
+
+
+

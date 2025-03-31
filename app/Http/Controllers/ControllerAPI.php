@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\RepartidoresImport;
+use App\Exports\RepartidoresExport;
 
 
 class ControllerAPI extends Controller
@@ -15,32 +16,33 @@ class ControllerAPI extends Controller
     {
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
-    
+
         $url = "http://localhost:3002/api/tb_repartidores?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
-    
+
         $data = Http::get($url)->json();
-    
+
         return view('repartidores.getData', ['data' => $data]);
     }
-    
+
     public function welcome()
-    {    
+    {
         return view('welcome');
     }
-    public function getData2($id){
+    public function getData2($id)
+    {
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3002/api/id_repartidores/'. $id);
+        $response = Http::get('http://localhost:3002/api/id_repartidores/' . $id);
 
-        
+
 
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
             $data = $response->json(); // Obtiene los datos en formato JSON
-            
+
             //return view('getData2')->with(['data' => $data]);
 
             return view('repartidores.getData2', compact('data')); // Pasamos los datos a una vista
@@ -64,7 +66,7 @@ class ControllerAPI extends Controller
 
     public function showEdit($id)
     {
-       
+
         // Obtener los datos actuales de la API
         $response = Http::get('http://localhost:3002/api/id_repartidores/' . $id);
 
@@ -106,13 +108,14 @@ class ControllerAPI extends Controller
         ]);
 
         if ($response->successful()) {
-                return redirect()->route('/consultar-api')->with('success', 'Registro actualizado correctamente');
-            } else {
-                return back()->withErrors(['error' => 'Error al actualizar el registro.']);
+            return redirect()->route('/consultar-api')->with('success', 'Registro actualizado correctamente');
+        } else {
+            return back()->withErrors(['error' => 'Error al actualizar el registro.']);
         }
     }
 
-    public function postData(Request $request) {
+    public function postData(Request $request)
+    {
         // Validar los datos del formulario
         $request->validate([
             'username' => 'required',
@@ -125,24 +128,24 @@ class ControllerAPI extends Controller
 
         try {
 
-        // Enviar los datos a la API para crear un nuevo registro
-        $response = Http::post('http://localhost:3002/api/registro_repartidores/', [
-            'username' => $request->input('username'),
-        'nombre' => $request->input('nombre'),
-        'App' => $request->input('App'),
-        'Apm' => $request->input('Apm'),
-        'Email' => $request->input('Email'),
-        'Password' => $request->input('Password'),
-        ]);
+            // Enviar los datos a la API para crear un nuevo registro
+            $response = Http::post('http://localhost:3002/api/registro_repartidores/', [
+                'username' => $request->input('username'),
+                'nombre' => $request->input('nombre'),
+                'App' => $request->input('App'),
+                'Apm' => $request->input('Apm'),
+                'Email' => $request->input('Email'),
+                'Password' => $request->input('Password'),
+            ]);
 
-        // Verificar si la solicitud fue exitosa
-        if ($response->successful()) {
-            return redirect()->route('/consultar-api')->with('success', 'Registro creado correctamente');
-        } else {
-            // Mostrar el mensaje de error de la API si está disponible
-            $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
-            return back()->withErrors(['error' => $errorMessage]);
-        }
+            // Verificar si la solicitud fue exitosa
+            if ($response->successful()) {
+                return redirect()->route('/consultar-api')->with('success', 'Registro creado correctamente');
+            } else {
+                // Mostrar el mensaje de error de la API si está disponible
+                $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
+                return back()->withErrors(['error' => $errorMessage]);
+            }
         } catch (\Exception $e) {
             // Mostrar el mensaje de error general si no se pudo conectar con la API
             return back()->withErrors(['error' => 'Error al conectar con la API.']);
@@ -153,24 +156,42 @@ class ControllerAPI extends Controller
 
 
     // Vista de formulario para crear un nuevo registro (cambia el nombre de la función)
-    public function showForm() {
+    public function showForm()
+    {
         return view('repartidores.postData');
     }
 
 
-   
+
 
 
 
     public function importRepartidores(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls'
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
 
-    Excel::import(new RepartidoresImport, $request->file('file'));
+        Excel::import(new RepartidoresImport, $request->file('file'));
 
-    return redirect()->back()->with('success', 'Registros importados correctamente');
-}
-    
+        return redirect()->back()->with('success', 'Registros importados correctamente');
+
+    }
+
+    public function exportarRepartidores()
+    {
+        return Excel::download(new RepartidoresExport, 'repartidores.xlsx');
+    }
+
+    public function mostrarGraficas()
+    {
+        // Obtener datos desde la API
+        $response = Http::get('http://localhost:3002/api/tb_repartidores');
+
+        // Si la solicitud fue exitosa, pasar datos a la vista
+        $repartidores = $response->successful() ? $response->json() : [];
+
+        return view('repartidores.graficas', compact('repartidores'));
+    }
+
 }

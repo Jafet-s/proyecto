@@ -62,7 +62,7 @@
   outline: none; }
 
 a {
-  color: #6777ef;
+  color: #c3cafd;
   font-weight: 500;
   transition: all .5s;
   -webkit-transition: all .5s;
@@ -74,6 +74,22 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .far,
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fal,
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
   margin-left: 4px; }
+
+
+
+nav{
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 40px;
+  background: linear-gradient(135deg, #313235, #955aff, #ffc623, #da4c4c, #313235);
+  background-size: 125%;
+  animation: fanimado 15s infinite;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
 
 .bg-primary {
   background-color: #6777ef !important; }
