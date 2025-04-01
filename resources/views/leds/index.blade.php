@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sistema de gestión de alumnos">
-    <title>Lista de Registros</title>
+    <title>Estado de los LEDs</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             
@@ -16,7 +17,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 66px;
+            padding: 106px;
             background: linear-gradient(135deg,rgb(44, 45, 48), #955aff, #955aff, #ffc623, #da4c4c, #da4c4c, #313235);
             background-size: 125%;
             animation: fanimado 10s infinite;
@@ -191,113 +192,45 @@
        }
    </style>
 </head>
-
 <body>
 
-    <nav>
-    <img src="{{ asset('storage/capibara2.jpeg') }}" alt="Evento con postres">
+<nav>
+<img src="{{ asset('storage/capibara2.jpeg') }}" alt="Evento con postres">
 
     <a href="{{ route('/welcome')}}" title="Inicio">Inicio</a>
-        <a href="{{ route('/consultar-api')}}" title="Ver lista de repartidores">Repartidores</a>
-        <a href="{{ route('/consultar-apiAdm')}}" title="Ver lista de Administradores">Administradores</a>
-        <a href="{{ route('/consultar-apiGar')}}" title="Ver lista de Garrafones">Garrafones</a>
-        <a href="{{ route('/consultar-apiCam')}}" title="Ver lista de Camionetas">Camionetas</a>
-        <a href="{{ route('/leds')}}">Ventas</a></li>
+    <a href="{{ route('/consultar-apiAdm')}}" title="Ver lista de Administradores">Administradores</a>
+    <a href="{{ route('/consultar-apiCli')}}" title="Ver lista de Clientes">Clientes</a>
+    <a href="{{ route('/consultar-apiGar')}}" title="Ver lista de Garrafones">Garrafones</a>
+    <a href="{{ route('/consultar-apiCam')}}" title="Ver lista de Camionetas">Camionetas</a>
+    <a href="{{ route('/consultar-api')}}" title="Ver lista de repartidores">Repartidores</a>
 
 
-    </nav>
-<hr><hr><hr><hr>
-    <div class="container mt-5">
+</nav>
 
-        <h2 class="mb-4">Lista de Registros de Clientes</h2>
-
-        <a href="{{ url('/alta-apiCli') }}" class="btn btn-primary mb-4">
-            <i class="bi bi-plus-circle"></i>  Agregar Registro
-        </a>
-
-        <form action="{{ route('import.clientes') }}" method="POST" enctype="multipart/form-data" class="d-flex flex-column align-items-center gap-3">
-    @csrf
-    <input type="file" name="file" class="form-control w-50" required>
-    <button type="submit" class="btn btn-primary px-4 py-2 fw-bold shadow-lg">
-        <i class="bi bi-upload"></i> Importar Excel
-    </button>
-    <a href="{{ route('exportar.clientes') }}" class="btn btn-success">
-    Exportar a Excel
-        </a>
-</form>
-</form>
-        
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-       
-        <div class="table-responsive">
-
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Telefono</th>
-                        <th scope="col">User</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Password</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-@foreach ($data as $cliente)
-    <tr>
-        <td>{{ $cliente['id_cliente'] }}</td>
-        <td>{{ $cliente['nombre'] }}</td>
-        <td>{{ $cliente['telefono'] }}</td>
-        <td>{{ $cliente['username'] }}</td>
-        <td>{{ $cliente['correo'] }}</td>
-        <td>{{ $cliente['contraseña'] }}</td>
-
-
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Acciones de registro">
-
-                                    <a href="{{ url('/editar-apiCli/' . $cliente['id_cliente']) }}" 
-                                       class="btn btn-warning btn-sm" 
-                                       title="Editar registro">
-                                        <i class="bi bi-pencil"></i> Editar
-                                    </a>
-                                  
-                                    <a href="{{ url('/consultar2-apiCli/' . $cliente['id_cliente']) }}" 
-                                       class="btn btn-primary btn-sm"
-                                       title="Ver detalles">
-                                        <i class="bi bi-eye"></i> Detalle
-                                    </a>
-                                    
-                                    <a href="{{ url('/borrar-apiCli/' . $cliente['id_cliente']) }}" 
-                                       class="btn btn-danger btn-sm" 
-                                       onclick="confirmarEliminacion(event)"
-                                       title="Eliminar registro">
-                                        <i class="bi bi-trash"></i> Borrar
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function confirmarEliminacion(event) {
-            if (!confirm("¿Está seguro de eliminar a este alumno?")) {
-                event.preventDefault();
-            }
-        }
-    </script>
+<div class="container">
+    <h2 class="mb-4">Ventas de garrafones </h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>A-1</th>
+                <th>B-1</th>
+                <th>Fecha y hora</th>
+                <th>Total ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($leds as $led)
+            <tr>
+                <td>{{ $led->id }}</td>
+                <td>{{ $led->led1 ? 'Vendido' : 'SV' }}</td>
+                <td>{{ $led->led2 ? 'Vendido' : 'SV' }}</td>
+                <td>{{ $led->timestamp }}</td>
+                <td>${{ ($led->led1 + $led->led2) * 15 }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

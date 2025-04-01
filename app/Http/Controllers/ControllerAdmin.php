@@ -15,33 +15,32 @@ class ControllerAdmin extends Controller
     {
         $searchTerm = $request->input('search', '');
         $page = $request->input('page', 1);
-
-        $url = "http://localhost:3002/api/tb_administrador?page={$page}";
+    
+        $url = "http://localhost:3000/tb_administrador?page={$page}";
         if ($searchTerm) {
             $url .= "&search=" . urlencode($searchTerm);
         }
-
+    
         $data = Http::get($url)->json();
-
+    
         return view('admin.getData', ['data' => $data]);
     }
-
-    public function welcome()
-    {
+    
+  public function welcome()
+    {    
         return view('welcome');
     }
-    public function getData2Adm($id)
-    {
+    public function getData2Adm($id){
         // Hacemos una solicitud GET a una API externa
-        $response = Http::get('http://localhost:3002/api/id_administrador/' . $id);
+        $response = Http::get('http://localhost:3000/id_administrador/'. $id);
 
-
+        
 
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
             $data = $response->json(); // Obtiene los datos en formato JSON
-
+            
             //return view('getData2')->with(['data' => $data]);
 
             return view('admin.getData2', compact('data')); // Pasamos los datos a una vista
@@ -53,7 +52,7 @@ class ControllerAdmin extends Controller
     public function deleteDataAdm($id)
     {
         // Hacemos una solicitud DELETE a la API para eliminar el recurso
-        $response = Http::delete('http://localhost:3002/api/eli_administrador/' . $id);
+        $response = Http::delete('http://localhost:3000/eli_administrador/' . $id);
 
         // Verificamos si la solicitud fue exitosa
         if ($response->successful()) {
@@ -65,9 +64,9 @@ class ControllerAdmin extends Controller
 
     public function showEditAdm($id)
     {
-
+       
         // Obtener los datos actuales de la API
-        $response = Http::get('http://localhost:3002/api/id_administrador/' . $id);
+        $response = Http::get('http://localhost:3000/id_administrador/' . $id);
 
         // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
@@ -96,7 +95,7 @@ class ControllerAdmin extends Controller
         ]);
 
         // Enviar los datos a la API para actualizar
-        $response = Http::put('http://localhost:3002/api/act_administrador/' . $id, [
+        $response = Http::put('http://localhost:3000/act_administrador/' . $id, [
             'nombre' => $request->nombre,
             'telefono' => $request->telefono,
             'username' => $request->username,
@@ -105,14 +104,13 @@ class ControllerAdmin extends Controller
         ]);
 
         if ($response->successful()) {
-            return redirect()->route('/consultar-apiAdm')->with('success', 'Registro actualizado correctamente');
-        } else {
-            return back()->withErrors(['error' => 'Error al actualizar el registro.']);
+                return redirect()->route('/consultar-apiAdm')->with('success', 'Registro actualizado correctamente');
+            } else {
+                return back()->withErrors(['error' => 'Error al actualizar el registro.']);
         }
     }
 
-    public function postDataAdm(Request $request)
-    {
+    public function postDataAdm(Request $request) {
         // Validar los datos del formulario
         $request->validate([
             'nombre' => 'required',
@@ -124,23 +122,23 @@ class ControllerAdmin extends Controller
 
         try {
 
-            // Enviar los datos a la API para crear un nuevo registro
-            $response = Http::post('http://localhost:3002/api/registro_administrador/', [
-                'nombre' => $request->input('nombre'),
-                'telefono' => $request->input('telefono'),
-                'username' => $request->input('username'),
-                'correo' => $request->input('correo'),
-                'contraseña' => $request->input('contraseña'),
-            ]);
+        // Enviar los datos a la API para crear un nuevo registro
+        $response = Http::post('http://localhost:3000/registro_administrador/', [
+        'nombre' => $request->input('nombre'),
+        'telefono' => $request->input('telefono'),
+        'username' => $request->input('username'),
+        'correo' => $request->input('correo'),
+        'contraseña' => $request->input('contraseña'),
+        ]);
 
-            // Verificar si la solicitud fue exitosa
-            if ($response->successful()) {
-                return redirect()->route('/consultar-apiAdm')->with('success', 'Registro creado correctamente');
-            } else {
-                // Mostrar el mensaje de error de la API si está disponible
-                $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
-                return back()->withErrors(['error' => $errorMessage]);
-            }
+        // Verificar si la solicitud fue exitosa
+        if ($response->successful()) {
+            return redirect()->route('/consultar-apiAdm')->with('success', 'Registro creado correctamente');
+        } else {
+            // Mostrar el mensaje de error de la API si está disponible
+            $errorMessage = $response->json()['message'] ?? 'Error al crear el registro.';
+            return back()->withErrors(['error' => $errorMessage]);
+        }
         } catch (\Exception $e) {
             // Mostrar el mensaje de error general si no se pudo conectar con la API
             return back()->withErrors(['error' => 'Error al conectar con la API.']);
@@ -151,27 +149,26 @@ class ControllerAdmin extends Controller
 
 
     // Vista de formulario para crear un nuevo registro (cambia el nombre de la función)
-    public function showFormAdm()
-    {
+    public function showFormAdm() {
         return view('admin.postData');
 
     }
-    public function importAdmin(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls'
-        ]);
+        public function importAdmin(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls'
+    ]);
 
-        Excel::import(new AdminImport, $request->file('file'));
+    Excel::import(new AdminImport, $request->file('file'));
 
-        return redirect()->back()->with('success', 'Registros importados correctamente');
-    }
-
-
-    public function exportarAdmin()
-    {
-        return Excel::download(new AdministradoresExport, 'admin.xlsx');
-    }
-
-
+    return redirect()->back()->with('success', 'Registros importados correctamente');
 }
+
+
+public function exportarAdmin()
+{
+    return Excel::download(new AdministradoresExport, 'admin.xlsx');
+}
+
+
+    }
